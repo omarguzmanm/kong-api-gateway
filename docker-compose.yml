@@ -88,3 +88,14 @@ services:
       KONGA_DB_PASSWORD: kong
     ports:
       - "1337:1337"
+  node:
+    image: node:18
+    container_name: node-api
+    working_dir: /app
+    command: sh -c "npm init -y && npm install express && node server.js"
+    volumes:
+      - ./api:/app
+    ports:
+      - "5000:5000"
+    networks:
+      - kong-ee-net
