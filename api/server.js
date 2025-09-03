@@ -1,15 +1,31 @@
-const express = require("express");
+const express = require('express');
 const app = express();
 const port = 5000;
 
-app.get("/users", (req, res) => {
-  res.json([
-    { id: 1, name: "Omar" },
-    { id: 2, name: "Ana" },
-    { id: 3, name: "Luis" }
-  ]);
+// Middleware to parse JSON
+app.use(express.json());
+
+// Test endpoint for users
+app.get('/users', (req, res) => {
+  res.json({
+    message: 'Users endpoint working!',
+    users: [
+      { id: 1, name: 'John Doe', email: 'john@example.com' },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com' }
+    ]
+  });
 });
 
-app.listen(port, () => {
-  console.log(`User API running at http://0.0.0.0:${port}`);
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', service: 'user-api' });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'User API is running!' });
+});
+
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });
