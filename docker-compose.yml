@@ -79,18 +79,25 @@ services:
     networks:
       - kong-ee-net
     environment:
-      KONGA_API_HOST: kong-cp
+      KONGA_API_HOST: http://kong-cp:8001
       KONGA_DB_ADAPTER: postgres
       KONGA_DB_HOST: kong-ee-database
       KONGA_DB_PORT: 5432
       KONGA_DB_NAME: kong
       KONGA_DB_USER: kong
       KONGA_DB_PASSWORD: kong
+      KONGA_HOOK_TIMEOUT: 120000
+      KONGA_API_TIMEOUT: 30000
+    depends_on:
+      kong-cp:
+        condition: service_started
+      kong-ee-database:
+        condition: service_healthy
     ports:
       - "1337:1337"
-  node:
+  user-api:
     image: node:18
-    container_name: node-api
+    container_name: user-api
     working_dir: /app
     command: sh -c "npm init -y && npm install express && node server.js"
     volumes:
